@@ -25,11 +25,11 @@ class FuelPomp:
     def fuel_by_value(self):
 
         quantity_value = int(input("what value would you like to put  "))
-        fuel_quantity_value = quantity_value / self.__value_liter
+        fuel_by_value = quantity_value / self.__value_liter
 
-        self.__fuel_output = int(self.__fuel_output + fuel_quantity_value)
+        self.__fuel_output = int(self.__fuel_output + fuel_by_value)
 
-        return print("The quantity of liters filled is {}".format(self.__fuel_output))
+        return print("The quantity of liters filled is {}".format(fuel_by_value))
 
     def fuel_by_liter(self):
 
