@@ -1,44 +1,98 @@
+stock_error_message = "insufficient stock"
+
+
+def get_amount_supply():
+
+    input_amount_supply = int(input("how many do you want to supply? "))
+
+    return input_amount_supply
+
 
 class FuelPomp:
+    def __init__(self, get_initial_stock_alcohol, get_initial_stock_gasoline):
+        self.__get_initial_stock_alcohol = int(get_initial_stock_alcohol)
+        self.__get_initial_stock_gasoline = int(get_initial_stock_gasoline)
+        self.__output_alcohol = 0
+        self.__output_gasoline = 0
+        self.__alcohol_price = 2
+        self.__gasoline_price = 3
+        self.__fuel_options = ("alcohol", "gasoline")
+        self.__supply_options = ("money", "liters")
 
-    def __init__(self, fuel_stock_initial):
-        self.__fuel_stock_initial = fuel_stock_initial
-        self.__type_fuel = str()
-        self.__value_liter = 0
-        self.__fuel_output = 0
-        self.__stock_control = 0
+    def get_supply_option(self):
+        input_option_supply = input("Supply options: in MONEY or by LITERS? ").lower()
 
-    def price_by_liter(self):
+        if input_option_supply in self.__supply_options:
+            return input_option_supply
+        else:
+            return print("Invalid supply option")
 
-        self.__type_fuel = input("Type of fuel ")
+    def get_fuel_option(self):
+        input_fuel_option = input("Fuel options: ALCOHOL or GASOLINE ").lower()
 
-        if self.__type_fuel == "gasoline":
-            self.__value_liter = 3
+        if input_fuel_option in self.__fuel_options:
+            return input_fuel_option
+        else:
+            return print("Invalid fuel option")
 
-        elif self.__type_fuel == "alcohol":
-            self.__value_liter = 2
+    def liter_supply_option(self):
 
-        fuel_price = self.__value_liter
+        input_amount_supply = get_amount_supply()
+        input_fuel_option = self.get_fuel_option()
+        output_message = "the value of supplying {} liters of {} is {} dollars"
 
-        return print("The price by liter is {} dollars".format(fuel_price))
+        if input_fuel_option == self.__fuel_options[0]:
+            result = self.__alcohol_price * input_amount_supply
 
-    def fuel_by_value(self):
+            if self.__get_initial_stock_alcohol - input_amount_supply >= 0:
+                self.__output_alcohol = self.__output_alcohol + input_amount_supply
+                self.__get_initial_stock_alcohol = self.__get_initial_stock_alcohol - input_amount_supply
+                print(output_message.format(input_amount_supply, self.__fuel_options[0], result))
+            else:
+                print(stock_error_message)
 
-        quantity_value = int(input("what value would you like to put  "))
-        fuel_by_value = quantity_value / self.__value_liter
+        elif input_fuel_option == self.__fuel_options[1]:
+            result = self.__gasoline_price * input_amount_supply
 
-        self.__fuel_output = int(self.__fuel_output + fuel_by_value)
+            if self.__get_initial_stock_gasoline - input_amount_supply >= 0:
+                self.__output_gasoline = self.__output_gasoline + input_amount_supply
+                self.__get_initial_stock_gasoline = self.__get_initial_stock_gasoline - input_amount_supply
+                print(output_message.format(input_amount_supply, self.__fuel_options[1], result))
+            else:
+                print(stock_error_message)
 
-        return print("The quantity of liters filled is {}".format(fuel_by_value))
+    def cash_supply_option(self):
 
-    def fuel_by_liter(self):
+        input_amount_supply = get_amount_supply()
+        input_fuel_option = self.get_fuel_option()
+        output_message = "The amount of fuel supplied is {}"
 
-        quantity_liter = int(input("how many liters would you like to fill "))
-        value_to_pay = quantity_liter * self.__value_liter
-        self.__fuel_output = self.__fuel_output + quantity_liter
+        if input_fuel_option == self.__fuel_options[0]:
+            result = int(input_amount_supply / self.__alcohol_price)
 
-        print("the amount payable is {}".format(value_to_pay))
+            if self.__get_initial_stock_alcohol - result >= 0:
+                self.__output_alcohol = self.__output_alcohol + result
+                self.__get_initial_stock_alcohol = self.__get_initial_stock_alcohol - result
+                print(output_message.format(result))
+            else:
+                print(stock_error_message)
 
-    def stock_control(self):
+        elif input_fuel_option == self.__fuel_options[1]:
+            result = int(input_amount_supply / self.__gasoline_price)
 
-        self.__stock_control = self.__fuel_stock_initial - self.__fuel_output
+            if self.__get_initial_stock_gasoline - result >= 0:
+                self.__output_gasoline = self.__output_gasoline + result
+                self.__get_initial_stock_gasoline = self.__get_initial_stock_gasoline - result
+                print(output_message.format(result))
+            else:
+                print(stock_error_message)
+
+    def supply(self):
+
+        supply = self.get_supply_option()
+
+        if supply == self.__supply_options[0]:
+            self.cash_supply_option()
+
+        elif supply == self.__supply_options[1]:
+            self.liter_supply_option()
